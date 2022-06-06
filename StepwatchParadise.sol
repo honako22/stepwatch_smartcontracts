@@ -1,22 +1,28 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.10;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-contract StepwatchParadise is ERC20, ERC20Burnable, Pausable, Ownable {
+contract StepwatchParadise is Initializable, ERC20Upgradeable, PausableUpgradeable, OwnableUpgradeable {
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() initializer {}
 
-    constructor() ERC20("Stepwatch Paradise", "SWP") {
+    function initialize() initializer external {
+        __ERC20_init("Stepwatch Paradise", "SWP");
+        __Pausable_init();
+        __Ownable_init();
+
         _mint(msg.sender, 0.5 * 1e9 * 10 ** decimals());
     }
 
-    function pause() public onlyOwner {
+    function pause() external onlyOwner {
         _pause();
     }
 
-    function unpause() public onlyOwner {
+    function unpause() external onlyOwner {
         _unpause();
     }
 
